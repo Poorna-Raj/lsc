@@ -109,11 +109,17 @@ void LSC::proccessCommands(String cmd)
 
 void LSC::readDigitalPin(uint8_t pin)
 {
+    Serial.print("DIGITAL:");
+    Serial.print(pin);
+    Serial.print(":");
     Serial.println(digitalRead(pin));
 }
 
 void LSC::readAnalogPin(uint8_t pin)
 {
+    Serial.print("ANALOG:");
+    Serial.print(pin);
+    Serial.print(":");
     Serial.println(analogRead(pin));
 }
 
