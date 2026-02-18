@@ -1,7 +1,7 @@
 import { LSCClient } from "./LSCClient.js";
 
 (async () => {
-  const lsc = new LSCClient("COM11");
+  const lsc = new LSCClient("COM11", 9600);
 
   await lsc.connect();
 
