@@ -11,5 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^40.4.1"
+  },
+  "dependencies": {
+    "serialport": "^13.0.0"
   }
 }
