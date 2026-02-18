@@ -16,7 +16,7 @@
 
     <div class="app-grid">
 
-        <!-- ═══════════════════════════════ CONFIG PANEL ═══════════════════════════════ -->
+        <!-- CONFIG PANEL -->
         <aside class="panel panel--config">
             <div class="panel__header">
                 <span class="panel__tag">01</span>
@@ -26,24 +26,33 @@
 
             <div class="panel__body">
 
-                <!-- Connection Section -->
                 <section class="config-section">
                     <p class="section-label">Serial Connection</p>
 
                     <div class="field-group">
                         <label class="field-label" for="comPort">COM Port</label>
-                        <div class="select-wrapper">
-                            <select id="comPort" class="field-select">
-                                <option value="">— Select Port —</option>
-                                <option>COM1</option>
-                                <option>COM2</option>
-                                <option>COM3</option>
-                                <option>COM4</option>
-                                <option>COM5</option>
-                            </select>
-                            <svg class="select-arrow" viewBox="0 0 10 6">
-                                <path d="M0 0l5 6 5-6z" />
-                            </svg>
+                        <div class="select-refresh-row">
+                            <div class="select-wrapper">
+                                <select id="comPort" class="field-select">
+                                    <option value="">— Select Port —</option>
+                                    <option>COM1</option>
+                                    <option>COM2</option>
+                                    <option>COM3</option>
+                                    <option>COM4</option>
+                                    <option>COM5</option>
+                                </select>
+                                <svg class="select-arrow" viewBox="0 0 10 6">
+                                    <path d="M0 0l5 6 5-6z" />
+                                </svg>
+                            </div>
+                            <button class="btn-refresh" id="refreshPortsBtn" title="Refresh ports"
+                                onclick="refreshPorts()">
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M13.5 8A5.5 5.5 0 1 1 10 3.07" />
+                                    <polyline points="10 1 10 3.5 12.5 3.5" />
+                                </svg>
+                            </button>
                         </div>
                     </div>
 
@@ -73,7 +82,6 @@
 
                 <div class="divider"></div>
 
-                <!-- Test Configuration Section -->
                 <section class="config-section">
                     <p class="section-label">Test Configuration</p>
 
@@ -126,7 +134,7 @@
             </div>
         </aside>
 
-        <!-- ═══════════════════════════════ 3D VIEW ═══════════════════════════════ -->
+        <!-- 3D VIEW -->
         <main class="panel panel--3d">
             <div class="panel__header">
                 <span class="panel__tag">02</span>
@@ -157,7 +165,7 @@
             </div>
         </main>
 
-        <!-- ═══════════════════════════════ INSTRUCTION PANEL ═══════════════════════════════ -->
+        <!-- INSTRUCTION PANEL -->
         <div class="panel panel--instruction">
             <div class="panel__header panel__header--inline">
                 <span class="panel__tag">03</span>
@@ -169,7 +177,7 @@
             </div>
         </div>
 
-        <!-- ═══════════════════════════════ SERIAL MONITOR ═══════════════════════════════ -->
+        <!-- SERIAL MONITOR -->
         <div class="panel panel--serial">
             <div class="panel__header">
                 <span class="panel__tag">04</span>
@@ -198,6 +206,17 @@
     <script>
         let connected = false;
         let autoScroll = true;
+
+        function refreshPorts() {
+            const btn = document.getElementById('refreshPortsBtn');
+            btn.classList.add('spinning');
+            logSerial('info', 'Scanning for available COM ports...');
+            // Replace with: window.electronAPI.listPorts().then(ports => { ... })
+            setTimeout(() => {
+                btn.classList.remove('spinning');
+                logSerial('info', 'Port scan complete.');
+            }, 800);
+        }
 
         function toggleConnect() {
             connected = !connected;
@@ -266,7 +285,5 @@
         }
     </script>
 </body>
-
-<script src="./renderer.js"></script>
 
 </html>

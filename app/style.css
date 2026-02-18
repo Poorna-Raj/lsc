@@ -469,3 +469,55 @@ html, body {
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 2px; }
+
+/* ── Refresh Button ───────────────────────────────────── */
+.select-refresh-row {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.select-refresh-row .select-wrapper {
+  flex: 1;
+}
+
+.btn-refresh {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+  padding: 0;
+}
+
+.btn-refresh svg {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-refresh:hover {
+  border-color: var(--border-hi);
+  color: var(--text-primary);
+  background: var(--accent-glow);
+}
+
+.btn-refresh:active {
+  transform: scale(0.93);
+}
+
+.btn-refresh.spinning svg {
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
