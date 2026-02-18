@@ -1,5 +1,6 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
+const { SerialPort } = require("serialport");
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -14,6 +15,11 @@ const createWindow = () => {
 
   win.loadFile("index.html");
 };
+
+ipcMain.handle("get-com-ports", async () => {
+  const ports = await SerialPort.list();
+  return ports.map((port) => port.path);
+});
 
 app.whenReady().then(() => {
   createWindow();
