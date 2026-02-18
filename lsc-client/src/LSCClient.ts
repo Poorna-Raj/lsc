@@ -3,7 +3,7 @@ import { LSCProtocol } from "./protocol/LSCProtocol.js";
 
 type EdgeHandler = (pin: number, type: "RISING" | "FALLING") => void;
 
-export class LSCClient {
+export default class LSCClient {
   private serial: SerialManager;
   private edgeHandler: EdgeHandler[] = [];
 
@@ -56,5 +56,3 @@ export class LSCClient {
     this.serial.send(LSCProtocol.unWatchDigital(pin));
   }
 }
-
-module.exports = { LSCClient };
