@@ -7,8 +7,8 @@ export class LSCClient {
   private serial: SerialManager;
   private edgeHandler: EdgeHandler[] = [];
 
-  constructor(port: string) {
-    this.serial = new SerialManager(port);
+  constructor(port: string, baudRate: number) {
+    this.serial = new SerialManager(port, baudRate);
   }
 
   async connect() {
