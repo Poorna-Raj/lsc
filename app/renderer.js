@@ -1,5 +1,6 @@
 const portSelect = document.getElementById("comPort");
 const baudRate = document.getElementById("baudRate");
+const btnPortsRefresh = document.getElementById("refreshPortsBtn");
 
 async function populatePorts() {
   const ports = await window.api.getComPorts();
@@ -13,5 +14,9 @@ async function populatePorts() {
     portSelect.appendChild(option);
   });
 }
+
+btnPortsRefresh.addEventListener("click", async () => {
+  populatePorts();
+});
 
 populatePorts();
