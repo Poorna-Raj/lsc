@@ -56,3 +56,5 @@ export class LSCClient {
     this.serial.send(LSCProtocol.unWatchDigital(pin));
   }
 }
+
+module.exports = { LSCClient };
