@@ -1,0 +1,471 @@
+/* ═══════════════════════════════════════════════════════
+   SENSOR TEST SUITE — style.css
+   Theme: Industrial / Utilitarian
+   ═══════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700&display=swap');
+
+/* ── Variables ─────────────────────────────────────────── */
+:root {
+  --bg:          #000000;
+  --surface:     #0a0a0a;
+  --surface-2:   #111111;
+  --border:      #1f1f1f;
+  --border-hi:   #2e2e2e;
+
+  --text-primary:  #e8e8e8;
+  --text-secondary:#666666;
+  --text-muted:    #333333;
+
+  --accent:        #e8e8e8;
+  --accent-dim:    #3a3a3a;
+  --accent-glow:   rgba(232, 232, 232, 0.07);
+
+  --green:         #4ade80;
+  --green-dim:     rgba(74, 222, 128, 0.10);
+  --yellow:        #facc15;
+  --red:           #f87171;
+
+  --panel-config-bg:  #050505;
+  --panel-3d-bg:      #030303;
+  --panel-instr-bg:   #060606;
+  --panel-serial-bg:  #040404;
+
+  --font-ui:   'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  --header-h: 42px;
+  --serial-input-h: 44px;
+}
+
+/* ── Reset ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── App Grid ──────────────────────────────────────────── */
+.app-grid {
+  display: grid;
+  height: 100vh;
+  width: 100vw;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: 1fr 80px 240px;
+  grid-template-areas:
+    "config  view"
+    "config  instruction"
+    "serial  serial";
+  gap: 1px;
+  background: var(--border);
+}
+
+/* ── Panels ────────────────────────────────────────────── */
+.panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.panel--config      { grid-area: config;      background: var(--panel-config-bg); }
+.panel--3d          { grid-area: view;         background: var(--panel-3d-bg); }
+.panel--instruction { grid-area: instruction;  background: var(--panel-instr-bg); flex-direction: row; align-items: center; }
+.panel--serial      { grid-area: serial;       background: var(--panel-serial-bg); }
+
+/* ── Panel Header ─────────────────────────────────────── */
+.panel__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: var(--header-h);
+  padding: 0 14px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,0.25);
+  flex-shrink: 0;
+}
+
+.panel__header--inline {
+  border-bottom: none;
+  flex-shrink: 0;
+  width: auto;
+  padding-right: 20px;
+  border-right: 1px solid var(--border);
+}
+
+.panel__tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.panel__title {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+/* ── Panel Body ───────────────────────────────────────── */
+.panel__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 16px;
+}
+
+.panel__body::-webkit-scrollbar { width: 4px; }
+.panel__body::-webkit-scrollbar-track { background: transparent; }
+.panel__body::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 2px; }
+
+/* ── Panel Footer ─────────────────────────────────────── */
+.panel__footer {
+  flex-shrink: 0;
+  height: 32px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  background: rgba(0,0,0,0.2);
+}
+
+.footer-info {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--red);
+  letter-spacing: 0.04em;
+  transition: color 0.3s;
+}
+
+.footer-info.connected { color: var(--green); }
+
+/* ── Status Dot ───────────────────────────────────────── */
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.status-dot--active {
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 6px var(--green); }
+  50%       { box-shadow: 0 0 12px var(--green); }
+}
+
+/* ── Config Sections ──────────────────────────────────── */
+.config-section { display: flex; flex-direction: column; gap: 12px; }
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-hi);
+  margin-bottom: 4px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 18px 0;
+}
+
+/* ── Fields ───────────────────────────────────────────── */
+.field-group { display: flex; flex-direction: column; gap: 5px; }
+
+.field-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.select-wrapper {
+  position: relative;
+}
+
+.field-select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 8px 32px 8px 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  outline: none;
+}
+
+.field-select:hover { border-color: var(--border-hi); }
+.field-select:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 2px var(--accent-glow); }
+
+.field-select option { background: var(--surface-2); }
+
+.select-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 5px;
+  fill: var(--text-muted);
+  pointer-events: none;
+}
+
+/* ── Buttons ──────────────────────────────────────────── */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.btn__icon {
+  font-size: 14px;
+  line-height: 1;
+  transition: transform 0.2s;
+}
+
+.btn--connect {
+  background: var(--surface-2);
+  color: var(--text-primary);
+  border: 1px solid var(--border-hi);
+  margin-top: 4px;
+}
+.btn--connect:hover { background: var(--accent-glow); border-color: #555; }
+.btn--connect:active { transform: scale(0.98); }
+
+.btn--connected {
+  background: var(--green-dim);
+  color: var(--green);
+  border-color: #2a5c3a;
+}
+
+.btn--init {
+  background: #e8e8e8;
+  color: #000;
+  border: 1px solid transparent;
+  margin-top: 4px;
+}
+.btn--init:hover { background: #fff; box-shadow: 0 0 20px rgba(255,255,255,0.15); }
+.btn--init:active { transform: scale(0.98); }
+.btn--init:hover .btn__icon { transform: translateX(2px); }
+
+/* ── View Controls ────────────────────────────────────── */
+.view-controls { display: flex; gap: 4px; }
+
+.icon-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  outline: none;
+}
+.icon-btn:hover { border-color: var(--border-hi); color: var(--text-primary); }
+.icon-btn--active { border-color: #3a3a3a; color: var(--text-primary); }
+
+/* ── 3D View Placeholder ──────────────────────────────── */
+.view-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.view-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* ── CSS 3D Cube ─────────────────────────────────────── */
+.view-cube {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(-20deg) rotateY(30deg);
+  animation: rotateCube 12s linear infinite;
+}
+
+@keyframes rotateCube {
+  from { transform: rotateX(-20deg) rotateY(0deg); }
+  to   { transform: rotateX(-20deg) rotateY(360deg); }
+}
+
+.cube-face {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.03);
+}
+
+.cube-face--front  { transform: translateZ(40px); }
+.cube-face--back   { transform: rotateY(180deg) translateZ(40px); }
+.cube-face--left   { transform: rotateY(-90deg) translateZ(40px); }
+.cube-face--right  { transform: rotateY(90deg) translateZ(40px); }
+.cube-face--top    { transform: rotateX(90deg) translateZ(40px); }
+.cube-face--bottom { transform: rotateX(-90deg) translateZ(40px); }
+
+.view-hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+.view-overlay-info {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  display: flex;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.view-overlay-info em {
+  font-style: normal;
+  color: var(--text-primary);
+}
+
+/* ── Instruction Panel ────────────────────────────────── */
+.instruction-ticker {
+  flex: 1;
+  padding: 0 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.instruction-ticker strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ── Serial Monitor ───────────────────────────────────── */
+.serial-body {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.serial-line { white-space: pre-wrap; word-break: break-all; }
+.serial-line--info  { color: var(--text-secondary); }
+.serial-line--data  { color: var(--text-primary); }
+.serial-line--warn  { color: var(--yellow); }
+.serial-line--error { color: var(--red); }
+.serial-line--cmd   { color: var(--text-primary); }
+
+/* ── Serial Input Row ─────────────────────────────────── */
+.serial-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--serial-input-h);
+  padding: 0 14px;
+  border-top: 1px solid var(--border);
+  background: rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+
+.serial-prompt {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.serial-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-primary);
+  caret-color: var(--text-primary);
+}
+
+.serial-input::placeholder { color: var(--text-muted); }
+
+.btn--send {
+  width: auto;
+  padding: 6px 14px;
+  font-size: 11px;
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn--send:hover { border-color: #3a3a3a; color: var(--text-primary); background: var(--surface-2); }
+
+/* ── Scrollbar global ─────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 2px; }

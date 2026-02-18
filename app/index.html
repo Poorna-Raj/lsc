@@ -5,14 +5,268 @@
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
-    <title>LSC</title>
+    <title>LCS Embedded Tester</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700&display=swap"
+        rel="stylesheet" />
 </head>
 
 <body>
-    <h1>Hello from Electron renderer!</h1>
-    <p>👋</p>
-    <p id="info"></p>
+
+    <div class="app-grid">
+
+        <!-- ═══════════════════════════════ CONFIG PANEL ═══════════════════════════════ -->
+        <aside class="panel panel--config">
+            <div class="panel__header">
+                <span class="panel__tag">01</span>
+                <h2 class="panel__title">Configuration</h2>
+                <div class="status-dot" id="statusDot"></div>
+            </div>
+
+            <div class="panel__body">
+
+                <!-- Connection Section -->
+                <section class="config-section">
+                    <p class="section-label">Serial Connection</p>
+
+                    <div class="field-group">
+                        <label class="field-label" for="comPort">COM Port</label>
+                        <div class="select-wrapper">
+                            <select id="comPort" class="field-select">
+                                <option value="">— Select Port —</option>
+                                <option>COM1</option>
+                                <option>COM2</option>
+                                <option>COM3</option>
+                                <option>COM4</option>
+                                <option>COM5</option>
+                            </select>
+                            <svg class="select-arrow" viewBox="0 0 10 6">
+                                <path d="M0 0l5 6 5-6z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="baudRate">Baud Rate</label>
+                        <div class="select-wrapper">
+                            <select id="baudRate" class="field-select">
+                                <option value="">— Select Rate —</option>
+                                <option>9600</option>
+                                <option>19200</option>
+                                <option>38400</option>
+                                <option>57600</option>
+                                <option selected>115200</option>
+                                <option>230400</option>
+                            </select>
+                            <svg class="select-arrow" viewBox="0 0 10 6">
+                                <path d="M0 0l5 6 5-6z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <button class="btn btn--connect" id="connectBtn" onclick="toggleConnect()">
+                        <span class="btn__icon">◎</span>
+                        <span class="btn__label">Connect</span>
+                    </button>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Test Configuration Section -->
+                <section class="config-section">
+                    <p class="section-label">Test Configuration</p>
+
+                    <div class="field-group">
+                        <label class="field-label" for="sensorModule">Sensor Module</label>
+                        <div class="select-wrapper">
+                            <select id="sensorModule" class="field-select">
+                                <option value="">— Select Module —</option>
+                                <option>IMU — MPU6050</option>
+                                <option>IMU — BNO055</option>
+                                <option>Barometer — BMP280</option>
+                                <option>GPS — NEO-6M</option>
+                                <option>Ultrasonic — HC-SR04</option>
+                                <option>ToF — VL53L0X</option>
+                            </select>
+                            <svg class="select-arrow" viewBox="0 0 10 6">
+                                <path d="M0 0l5 6 5-6z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="testMethod">Testing Method</label>
+                        <div class="select-wrapper">
+                            <select id="testMethod" class="field-select">
+                                <option value="">— Select Method —</option>
+                                <option>Static Calibration</option>
+                                <option>Dynamic Response</option>
+                                <option>Noise Floor Analysis</option>
+                                <option>Temperature Sweep</option>
+                                <option>Stress Test — Continuous</option>
+                                <option>Self-Test Routine</option>
+                            </select>
+                            <svg class="select-arrow" viewBox="0 0 10 6">
+                                <path d="M0 0l5 6 5-6z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <button class="btn btn--init" id="initBtn" onclick="initTest()">
+                        <span class="btn__icon">▶</span>
+                        <span class="btn__label">Initialize Test</span>
+                    </button>
+                </section>
+
+            </div>
+
+            <div class="panel__footer">
+                <span class="footer-info" id="connStatus">● Disconnected</span>
+            </div>
+        </aside>
+
+        <!-- ═══════════════════════════════ 3D VIEW ═══════════════════════════════ -->
+        <main class="panel panel--3d">
+            <div class="panel__header">
+                <span class="panel__tag">02</span>
+                <h2 class="panel__title">3D View</h2>
+                <div class="view-controls">
+                    <button class="icon-btn" title="Reset View">⟳</button>
+                    <button class="icon-btn" title="Fit to Screen">⤢</button>
+                    <button class="icon-btn" title="Grid">⊞</button>
+                </div>
+            </div>
+            <div class="panel__body view-body">
+                <div class="view-placeholder">
+                    <div class="view-cube">
+                        <div class="cube-face cube-face--front"></div>
+                        <div class="cube-face cube-face--back"></div>
+                        <div class="cube-face cube-face--left"></div>
+                        <div class="cube-face cube-face--right"></div>
+                        <div class="cube-face cube-face--top"></div>
+                        <div class="cube-face cube-face--bottom"></div>
+                    </div>
+                    <p class="view-hint">3D visualization will render here</p>
+                </div>
+                <div class="view-overlay-info">
+                    <span>X: <em>0.000</em></span>
+                    <span>Y: <em>0.000</em></span>
+                    <span>Z: <em>0.000</em></span>
+                </div>
+            </div>
+        </main>
+
+        <!-- ═══════════════════════════════ INSTRUCTION PANEL ═══════════════════════════════ -->
+        <div class="panel panel--instruction">
+            <div class="panel__header panel__header--inline">
+                <span class="panel__tag">03</span>
+                <h2 class="panel__title">Instructions</h2>
+            </div>
+            <div class="instruction-ticker">
+                <p id="instructionText">Select a COM port and baud rate, then press <strong>Connect</strong> to
+                    establish serial communication.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════ SERIAL MONITOR ═══════════════════════════════ -->
+        <div class="panel panel--serial">
+            <div class="panel__header">
+                <span class="panel__tag">04</span>
+                <h2 class="panel__title">Serial Monitor</h2>
+                <div class="view-controls">
+                    <button class="icon-btn" title="Clear" onclick="clearMonitor()">✕ Clear</button>
+                    <button class="icon-btn icon-btn--active" title="Auto-scroll" id="autoScrollBtn"
+                        onclick="toggleAutoScroll()">↓ Auto</button>
+                </div>
+            </div>
+            <div class="panel__body serial-body" id="serialMonitor">
+                <div class="serial-line serial-line--info">[SYS] Sensor Test Suite v1.0.0 — ready.</div>
+                <div class="serial-line serial-line--info">[SYS] Waiting for connection...</div>
+            </div>
+            <div class="serial-input-row">
+                <span class="serial-prompt">&gt;</span>
+                <input type="text" class="serial-input" id="serialInput" placeholder="Send command..."
+                    onkeydown="sendCommand(event)" />
+                <button class="btn btn--send" onclick="sendCommand({key:'Enter'})">Send</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="renderer.js"></script>
+    <script>
+        let connected = false;
+        let autoScroll = true;
+
+        function toggleConnect() {
+            connected = !connected;
+            const btn = document.getElementById('connectBtn');
+            const dot = document.getElementById('statusDot');
+            const status = document.getElementById('connStatus');
+            const instruction = document.getElementById('instructionText');
+
+            if (connected) {
+                btn.classList.add('btn--connected');
+                btn.querySelector('.btn__icon').textContent = '◉';
+                btn.querySelector('.btn__label').textContent = 'Disconnect';
+                dot.classList.add('status-dot--active');
+                status.textContent = '● Connected';
+                status.classList.add('connected');
+                logSerial('info', 'Serial connection established.');
+                instruction.innerHTML = 'Connection active. Now select a <strong>Sensor Module</strong> and <strong>Testing Method</strong>, then press <strong>Initialize Test</strong>.';
+            } else {
+                btn.classList.remove('btn--connected');
+                btn.querySelector('.btn__icon').textContent = '◎';
+                btn.querySelector('.btn__label').textContent = 'Connect';
+                dot.classList.remove('status-dot--active');
+                status.textContent = '● Disconnected';
+                status.classList.remove('connected');
+                logSerial('warn', 'Serial connection closed.');
+                instruction.innerHTML = 'Select a COM port and baud rate, then press <strong>Connect</strong> to establish serial communication.';
+            }
+        }
+
+        function initTest() {
+            const module = document.getElementById('sensorModule').value;
+            const method = document.getElementById('testMethod').value;
+            if (!connected) { logSerial('error', 'Cannot initialize — not connected.'); return; }
+            if (!module || !method) { logSerial('warn', 'Please select a sensor module and testing method.'); return; }
+            logSerial('info', `Initializing: ${module} / ${method}`);
+            logSerial('data', 'Sending INIT command to device...');
+            document.getElementById('instructionText').innerHTML = `Running <strong>${method}</strong> on <strong>${module}</strong>. Monitor serial output for results.`;
+        }
+
+        function logSerial(type, msg) {
+            const monitor = document.getElementById('serialMonitor');
+            const ts = new Date().toLocaleTimeString('en-US', { hour12: false });
+            const line = document.createElement('div');
+            line.className = `serial-line serial-line--${type}`;
+            line.textContent = `[${ts}] ${msg}`;
+            monitor.appendChild(line);
+            if (autoScroll) monitor.scrollTop = monitor.scrollHeight;
+        }
+
+        function clearMonitor() {
+            document.getElementById('serialMonitor').innerHTML = '<div class="serial-line serial-line--info">[SYS] Monitor cleared.</div>';
+        }
+
+        function toggleAutoScroll() {
+            autoScroll = !autoScroll;
+            document.getElementById('autoScrollBtn').classList.toggle('icon-btn--active', autoScroll);
+        }
+
+        function sendCommand(e) {
+            if (e.key !== 'Enter') return;
+            const input = document.getElementById('serialInput');
+            const val = input.value.trim();
+            if (!val) return;
+            logSerial('cmd', `> ${val}`);
+            input.value = '';
+        }
+    </script>
 </body>
+
 <script src="./renderer.js"></script>
 
 </html>
